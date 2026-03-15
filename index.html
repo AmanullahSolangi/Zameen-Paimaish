@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="sd" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="theme-color" content="#0f6e56"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="زمين ماپ"/>
+<meta name="description" content="سنڌي زمين جي ماپ ڪيلڪيوليٽر"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<title>زمين جي ماپ — سنڌ</title>
+<style>
+:root {
+  --green: #0f6e56;
+  --green-light: #1d9e75;
+  --green-pale: #e8f5f0;
+  --green-dark: #085041;
+  --border: #d0e8df;
+  --bg: #f7faf8;
+  --card: #ffffff;
+  --text: #1a2e26;
+  --muted: #5a7a6e;
+  --accent: #e8f5f0;
+  --warn: #fff8e1;
+  --warn-border: #f9a825;
+  --shadow: 0 2px 12px rgba(15,110,86,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg); color: var(--text); direction: rtl; min-height: 100vh; }
+
+/* HEADER */
+.header { background: var(--green); color: white; padding: 14px 16px 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.header-inner { max-width: 600px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.header h1 { font-size: 18px; font-weight: 600; }
+.header .sub { font-size: 11px; opacity: 0.85; margin-top: 1px; }
+.install-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; display: none; }
+.install-btn.show { display: block; }
+
+/* NAV TABS */
+.nav { background: white; border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 99; }
+.nav-inner { max-width: 600px; margin: 0 auto; display: flex; overflow-x: auto; }
+.nav-tab { flex: 1; min-width: 70px; padding: 12px 8px; text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.15s; }
+.nav-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+.nav-tab:hover { background: var(--green-pale); }
+
+/* MAIN */
+.main { max-width: 600px; margin: 0 auto; padding: 16px; }
+.section { display: none; }
+.section.show { display: block; }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.card-title { font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+
+/* FORM */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+.field input, .field select { width: 100%; padding: 12px 14px; font-size: 16px; border: 1.5px solid var(--border); border-radius: 10px; background: white; color: var(--text); text-align: right; direction: rtl; transition: border 0.15s; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(15,110,86,0.10); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* DIAGRAM */
+.diagram { background: var(--green-pale); border: 1px solid #b0d8c8; border-radius: 12px; padding: 12px; margin: 12px 0; text-align: center; }
+.diagram svg { max-width: 100%; }
+
+/* BUTTONS */
+.btn-calc { width: 100%; padding: 14px; font-size: 17px; font-weight: 700; border: none; border-radius: 12px; background: var(--green); color: white; cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px; }
+.btn-calc:active { transform: scale(0.98); background: var(--green-dark); }
+.btn-pdf { width: 100%; padding: 13px; font-size: 15px; font-weight: 600; border: 2px solid var(--green); border-radius: 12px; background: white; color: var(--green); cursor: pointer; transition: all 0.15s; margin-top: 10px; }
+.btn-pdf:active { background: var(--green-pale); }
+.btn-clear { width: 100%; padding: 10px; font-size: 13px; border: 1px solid #ccc; border-radius: 10px; background: white; color: var(--muted); cursor: pointer; margin-top: 8px; }
+
+/* RESULTS */
+.result-box { margin-top: 14px; background: var(--green-pale); border: 1px solid #b0d8c8; border-radius: 14px; padding: 16px; display: none; }
+.result-main { text-align: center; padding: 10px 0 14px; }
+.result-big { font-size: 44px; font-weight: 700; color: var(--green); line-height: 1; }
+.result-unit { font-size: 16px; color: var(--green-dark); margin-top: 4px; font-weight: 600; }
+.result-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.result-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+.result-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.result-item .rv { font-size: 18px; font-weight: 700; color: var(--text); }
+.result-item .rl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* STEPS */
+.step { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.step-num { min-width: 28px; height: 28px; background: var(--green); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.step-text { font-size: 14px; color: var(--muted); padding-top: 4px; line-height: 1.6; }
+.step-text b { color: var(--text); }
+
+/* REFERENCE TABLE */
+.ref-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.ref-row:last-child { border-bottom: none; }
+.ref-val { font-weight: 700; color: var(--green-dark); text-align: left; direction: ltr; }
+.ref-lbl { color: var(--muted); }
+
+/* INFO / NOTES */
+.info-box { background: var(--accent); border-right: 4px solid var(--green); padding: 10px 14px; border-radius: 10px; margin-bottom: 14px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+.note-box { background: var(--warn); border: 1px solid var(--warn-border); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #5a4000; line-height: 1.7; margin-top: 12px; }
+
+/* OWNER FORM */
+.owner-section { background: var(--accent); border: 1px solid #b0d8c8; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+.owner-title { font-size: 13px; font-weight: 600; color: var(--green-dark); margin-bottom: 10px; }
+
+/* OFFLINE BANNER */
+.offline-banner { display: none; background: #fff3cd; border: 1px solid #ffc107; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #856404; margin-bottom: 12px; text-align: center; }
+.offline-banner.show { display: block; }
+
+/* CONVERT RESULTS */
+.cv-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-top: 12px; }
+.cv-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.cv-item .cv-v { font-size: 17px; font-weight: 700; color: var(--text); }
+.cv-item .cv-l { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* SPINNER */
+.spinner { display: none; text-align: center; padding: 16px; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 400px) {
+  .result-big { font-size: 36px; }
+  .result-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>🌾 زمين جي ماپ</h1>
+      <div class="sub">سنڌ — روايتي ماپ ڪيلڪيوليٽر</div>
+    </div>
+    <button class="install-btn" id="installBtn" onclick="installApp()">📲 انسٽال</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-tab active" onclick="showTab('basic',this)">📐 بنيادي</div>
+    <div class="nav-tab" onclick="showTab('irregular',this)">📏 ويجهي</div>
+    <div class="nav-tab" onclick="showTab('convert',this)">🔄 تبديلي</div>
+    <div class="nav-tab" onclick="showTab('report',this)">📄 رپورٽ</div>
+    <div class="nav-tab" onclick="showTab('ref',this)">📚 حوالو</div>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="offline-banner" id="offlineBanner">⚠️ آفلائن موڊ — ڪيلڪيوليٽر ڪم ڪري ٿو</div>
+
+  <!-- TAB 1: BASIC -->
+  <div id="tab-basic" class="section show">
+    <div class="card">
+      <div class="card-title">📐 منڍو × لام — برابر ماپ</div>
+      <div class="info-box">جڏهن ٻئي منڍا برابر ۽ ٻئي لام برابر هجن ته: <b>منڍو × لام = رقبو (فوٽ)</b></div>
+
+      <div class="diagram">
+        <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="55" y="20" width="190" height="110" fill="rgba(15,110,86,0.12)" stroke="#0f6e56" stroke-width="2.5" rx="4"/>
+          <text x="150" y="14" text-anchor="middle" font-size="13" fill="#085041" font-weight="bold" id="d-lam-top">لام: ؟ فوٽ</text>
+          <text x="150" y="148" text-anchor="middle" font-size="13" fill="#085041" font-weight="bold" id="d-lam-bot">لام: ؟ فوٽ</text>
+          <text x="38" y="72" text-anchor="middle" font-size="12" fill="#085041" font-weight="bold">منڍو</text>
+          <text x="38" y="87" text-anchor="middle" font-size="12" fill="#0f6e56" id="d-m-l">؟ فوٽ</text>
+          <text x="265" y="72" text-anchor="middle" font-size="12" fill="#085041" font-weight="bold">منڍو</text>
+          <text x="265" y="87" text-anchor="middle" font-size="12" fill="#0f6e56" id="d-m-r">؟ فوٽ</text>
+          <text x="150" y="76" text-anchor="middle" font-size="13" fill="#0f6e56" font-weight="bold" id="d-center">نتيجو هتي</text>
+        </svg>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>🔸 منڍو (فوٽ)</label>
+          <input type="number" id="b-mundha" placeholder="121" inputmode="decimal" oninput="calcBasic()"/>
+        </div>
+        <div class="field">
+          <label>🔹 لام (فوٽ)</label>
+          <input type="number" id="b-lam" placeholder="360" inputmode="decimal" oninput="calcBasic()"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>يونٽ چونڊيو</label>
+        <select id="b-unit" onchange="calcBasic()">
+          <option value="ghonta">گُھنٽا / ويسا</option>
+          <option value="acre">ايڪڙ</option>
+          <option value="jurib">جريب (سنڌ)</option>
+          <option value="chauth">چوٿائي</option>
+          <option value="sqft">اسڪوائر فوٽ</option>
+          <option value="sqm">اسڪوائر ميٽر</option>
+        </select>
+      </div>
+      <button class="btn-calc" onclick="calcBasic()">🧮 حساب ڪريو</button>
+      <button class="btn-clear" onclick="clearBasic()">🗑 صاف ڪريو</button>
+
+      <div class="result-box" id="res-basic">
+        <div class="result-main">
+          <div class="result-big" id="rb-main">0</div>
+          <div class="result-unit" id="rb-unit">گُھنٽا</div>
+          <div class="result-sub" id="rb-sub"></div>
+        </div>
+        <div class="result-grid" id="rb-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: IRREGULAR -->
+  <div id="tab-irregular" class="section">
+    <div class="card">
+      <div class="card-title">📏 ويجهي ماپ — غير برابر زمين</div>
+      <div class="info-box">جيڪڏهن منڍا يا لام برابر نه هجن: <b>(م1+م2)÷2 × (ل1+ل2)÷2</b></div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">ٻئي منڍا جوڙ ڪري <b>2 سان ونڊ ڪريو</b> = اوسط منڍو</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">ٻئي لام جوڙ ڪري <b>2 سان ونڊ ڪريو</b> = اوسط لام</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><b>اوسط منڍو × اوسط لام</b> = ڪل رقبو (فوٽ)</div>
+      </div>
+
+      <div class="row2">
+        <div class="field"><label>منڍو 1 (فوٽ)</label><input type="number" id="i-m1" placeholder="121" inputmode="decimal" oninput="calcIrr()"/></div>
+        <div class="field"><label>منڍو 2 (فوٽ)</label><input type="number" id="i-m2" placeholder="130" inputmode="decimal" oninput="calcIrr()"/></div>
+        <div class="field"><label>لام 1 (فوٽ)</label><input type="number" id="i-l1" placeholder="360" inputmode="decimal" oninput="calcIrr()"/></div>
+        <div class="field"><label>لام 2 (فوٽ)</label><input type="number" id="i-l2" placeholder="380" inputmode="decimal" oninput="calcIrr()"/></div>
+      </div>
+      <div class="field">
+        <label>يونٽ چونڊيو</label>
+        <select id="i-unit" onchange="calcIrr()">
+          <option value="ghonta">گُھنٽا / ويسا</option>
+          <option value="acre">ايڪڙ</option>
+          <option value="jurib">جريب (سنڌ)</option>
+          <option value="chauth">چوٿائي</option>
+          <option value="sqft">اسڪوائر فوٽ</option>
+          <option value="sqm">اسڪوائر ميٽر</option>
+        </select>
+      </div>
+      <button class="btn-calc" onclick="calcIrr()">🧮 اوسط سان حساب ڪريو</button>
+      <button class="btn-clear" onclick="clearIrr()">🗑 صاف ڪريو</button>
+
+      <div class="result-box" id="res-irr">
+        <div class="result-main">
+          <div class="result-big" id="ri-main">0</div>
+          <div class="result-unit" id="ri-unit">گُھنٽا</div>
+          <div class="result-sub" id="ri-avg"></div>
+        </div>
+        <div class="result-grid" id="ri-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: CONVERT -->
+  <div id="tab-convert" class="section">
+    <div class="card">
+      <div class="card-title">🔄 ماپ جي تبديلي</div>
+      <div class="row2">
+        <div class="field">
+          <label>قدر</label>
+          <input type="number" id="cv-val" placeholder="40" inputmode="decimal" oninput="calcConvert()"/>
+        </div>
+        <div class="field">
+          <label>يونٽ</label>
+          <select id="cv-from" onchange="calcConvert()">
+            <option value="ghonta">گھنٽا / ويسا</option>
+            <option value="acre">ايڪڙ</option>
+            <option value="jurib">جريب (سنڌ)</option>
+            <option value="chauth">چوٿائي</option>
+            <option value="purh">پُرهه</option>
+            <option value="sqft">اسڪوائر فوٽ</option>
+            <option value="sqm">اسڪوائر ميٽر</option>
+          </select>
+        </div>
+      </div>
+      <div class="cv-grid" id="cv-grid">
+        <div style="grid-column:span 2;text-align:center;color:var(--muted);font-size:13px;padding:20px">مٿي قدر ڀريو</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📖 مثال: 121 × 360 = 1 ايڪڙ</div>
+      <div class="step"><div class="step-num">1</div><div class="step-text"><b>121 × 360 = 43,560</b> فوٽ</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><b>43,560 ÷ 1,089 = 40</b> گھنٽا</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><b>40 گھنٽا = 1 ايڪڙ ✓</b></div></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: REPORT -->
+  <div id="tab-report" class="section">
+    <div class="card">
+      <div class="card-title">📄 PDF رپورٽ</div>
+      <div class="info-box">پهريون حساب ڪريو (بنيادي يا ويجهي ٽئب ۾)، پوء هتي مالڪ جي تفصيل ڀريو ۽ PDF ٺاهيو</div>
+
+      <div class="owner-section">
+        <div class="owner-title">👤 مالڪ جي معلومات</div>
+        <div class="field"><label>مالڪ جو نالو</label><input type="text" id="r-naam" placeholder="مثال: محمد علي سومرو"/></div>
+        <div class="row2">
+          <div class="field"><label>ڳوٺ / شهر</label><input type="text" id="r-gaon" placeholder="مثال: ميرپور خاص"/></div>
+          <div class="field"><label>ضلعو</label><input type="text" id="r-zila" placeholder="مثال: ميرپور خاص"/></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>خسرو نمبر</label><input type="text" id="r-khasra" placeholder="مثال: 123/A"/></div>
+          <div class="field"><label>ديهه نمبر</label><input type="text" id="r-deh" placeholder="مثال: 45"/></div>
+        </div>
+        <div class="field"><label>تعلقو</label><input type="text" id="r-taluka" placeholder="مثال: ڄامشورو"/></div>
+        <div class="field"><label>نوٽس (اختياري)</label><input type="text" id="r-notes" placeholder="ڪو به خاص نوٽ…"/></div>
+      </div>
+
+      <div id="report-preview" style="display:none">
+        <div class="owner-section" style="background:#e8f5f0">
+          <div class="owner-title">📊 حساب جو خلاصو</div>
+          <div id="report-summary"></div>
+        </div>
+      </div>
+
+      <button class="btn-calc" onclick="generatePDF()">📥 PDF ٺاهيو ۽ محفوظ ڪريو</button>
+      <div class="spinner" id="pdf-spinner">⏳ PDF ٺهي رهي آهي…</div>
+
+      <div class="note-box">
+        💡 <b>نوٽ:</b> PDF ٺهڻ لاء پهريون "بنيادي" يا "ويجهي" ٽئب ۾ وڃي حساب ڪريو، پوء هتي واپس اچو.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: REFERENCE -->
+  <div id="tab-ref" class="section">
+    <div class="card">
+      <div class="card-title">📚 سنڌي زمين جي ماپ — مڪمل حوالو</div>
+      <div class="ref-row"><span class="ref-lbl">1 گُھنٽو / ويسو</span><span class="ref-val">1,089 sq ft (33×33)</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 ايڪڙ</span><span class="ref-val">40 گھنٽا = 43,560 ft²</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 چوٿائي</span><span class="ref-val">10 گھنٽا = 10,890 ft²</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 ايڪڙ ۾ چوٿائيون</span><span class="ref-val">4 چوٿائيون</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 چوٿائي ۾ ويسا</span><span class="ref-val">10 ويسا</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 ويسا ۾ پرها</span><span class="ref-val">5 پُرهه</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 جريب (سنڌ)</span><span class="ref-val">اڌ ايڪڙ = 20 گھنٽا</span></div>
+      <div class="ref-row"><span class="ref-lbl">زرعي ايڪڙ (طريقو 1)</span><span class="ref-val">220 × 198 ft</span></div>
+      <div class="ref-row"><span class="ref-lbl">زرعي ايڪڙ (طريقو 2)</span><span class="ref-val">264 × 165 ft (8×5 سينڪليون)</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 ايڪڙ = مربع ميٽر</span><span class="ref-val">4,046.86 m²</span></div>
+      <div class="ref-row"><span class="ref-lbl">1 ايڪڙ = مربع گز</span><span class="ref-val">4,840 sq yd</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🌾 فارمولا ياد ڪريو</div>
+      <div class="step"><div class="step-num">A</div><div class="step-text"><b>برابر زمين:</b> منڍو × لام ÷ 1089 = گھنٽا</div></div>
+      <div class="step"><div class="step-num">B</div><div class="step-text"><b>غير برابر:</b> (م1+م2)÷2 × (ل1+ل2)÷2 ÷ 1089 = گھنٽا</div></div>
+      <div class="step"><div class="step-num">C</div><div class="step-text"><b>گھنٽا کان ايڪڙ:</b> گھنٽا ÷ 40 = ايڪڙ</div></div>
+    </div>
+
+    <div class="note-box">
+      ✅ هي ايپ <b>آفلائن</b> ڪم ڪري ٿي. هڪ دفعو کولو، انٽرنيٽ کانسواء به ڪم ڪندي.
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- jsPDF CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+// ===================== STATE =====================
+let lastResult = null;
+let lastMeasurement = null;
+let deferredPrompt = null;
+
+// ===================== TABS =====================
+function showTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('show'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('show');
+  if (el) el.classList.add('active');
+  if (id === 'report') updateReportPreview();
+}
+
+// ===================== UNITS =====================
+const UNIT_NAMES = {
+  ghonta: 'گُھنٽا / ويسا', acre: 'ايڪڙ',
+  jurib: 'جريب', chauth: 'چوٿائي',
+  sqft: 'اسڪوائر فوٽ', sqm: 'اسڪوائر ميٽر'
+};
+
+function toSelectedUnit(sqft, unit) {
+  if (unit === 'ghonta') return sqft / 1089;
+  if (unit === 'acre') return sqft / 43560;
+  if (unit === 'jurib') return sqft / 21780;
+  if (unit === 'chauth') return sqft / 10890;
+  if (unit === 'sqft') return sqft;
+  if (unit === 'sqm') return sqft * 0.092903;
+  return sqft / 1089;
+}
+
+function makeGrid(sqft) {
+  const rows = [
+    { v: (sqft/1089).toFixed(2), l: 'گُھنٽا / ويسا' },
+    { v: (sqft/43560).toFixed(4), l: 'ايڪڙ' },
+    { v: (sqft/21780).toFixed(3), l: 'جريب (سنڌ)' },
+    { v: (sqft/10890).toFixed(3), l: 'چوٿائي' },
+    { v: Math.round(sqft).toLocaleString(), l: 'اسڪوائر فوٽ' },
+    { v: (sqft*0.092903).toFixed(1), l: 'اسڪوائر ميٽر' }
+  ];
+  return rows.map(r =>
+    `<div class="result-item"><div class="rv">${r.v}</div><div class="rl">${r.l}</div></div>`
+  ).join('');
+}
+
+// ===================== BASIC CALC =====================
+function calcBasic() {
+  const m = parseFloat(document.getElementById('b-mundha').value) || 0;
+  const l = parseFloat(document.getElementById('b-lam').value) || 0;
+  const unit = document.getElementById('b-unit').value;
+
+  document.getElementById('d-lam-top').textContent = `لام: ${l || '؟'} فوٽ`;
+  document.getElementById('d-lam-bot').textContent = `لام: ${l || '؟'} فوٽ`;
+  document.getElementById('d-m-l').textContent = `${m || '؟'} فوٽ`;
+  document.getElementById('d-m-r').textContent = `${m || '؟'} فوٽ`;
+
+  if (!m || !l) { document.getElementById('d-center').textContent = 'نتيجو هتي'; return; }
+  const sqft = m * l;
+  const val = toSelectedUnit(sqft, unit);
+  const ghonta = sqft / 1089;
+  document.getElementById('d-center').textContent = `${ghonta.toFixed(1)} گھنٽا`;
+
+  const box = document.getElementById('res-basic');
+  box.style.display = 'block';
+  document.getElementById('rb-main').textContent = val.toFixed(unit==='sqft'?0:unit==='sqm'?1:2);
+  document.getElementById('rb-unit').textContent = UNIT_NAMES[unit];
+  document.getElementById('rb-sub').textContent = `${m} × ${l} = ${Math.round(sqft).toLocaleString()} فوٽ`;
+  document.getElementById('rb-grid').innerHTML = makeGrid(sqft);
+
+  lastResult = { sqft, mundha: m, lam: l, type: 'basic', mundha2: m, lam2: l };
+  lastMeasurement = { sqft, ghonta: sqft/1089, acre: sqft/43560 };
+}
+
+function clearBasic() {
+  ['b-mundha','b-lam'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('res-basic').style.display='none';
+  document.getElementById('d-center').textContent='نتيجو هتي';
+  lastResult = null;
+}
+
+// ===================== IRREGULAR CALC =====================
+function calcIrr() {
+  const m1 = parseFloat(document.getElementById('i-m1').value)||0;
+  const m2 = parseFloat(document.getElementById('i-m2').value)||0;
+  const l1 = parseFloat(document.getElementById('i-l1').value)||0;
+  const l2 = parseFloat(document.getElementById('i-l2').value)||0;
+  const unit = document.getElementById('i-unit').value;
+  if (!m1||!m2||!l1||!l2) return;
+
+  const avgM = (m1+m2)/2, avgL = (l1+l2)/2;
+  const sqft = avgM * avgL;
+  const val = toSelectedUnit(sqft, unit);
+
+  document.getElementById('res-irr').style.display = 'block';
+  document.getElementById('ri-main').textContent = val.toFixed(unit==='sqft'?0:unit==='sqm'?1:2);
+  document.getElementById('ri-unit').textContent = UNIT_NAMES[unit];
+  document.getElementById('ri-avg').textContent = `اوسط منڍو: ${avgM.toFixed(1)} | اوسط لام: ${avgL.toFixed(1)} | ${Math.round(sqft).toLocaleString()} فوٽ`;
+  document.getElementById('ri-grid').innerHTML = makeGrid(sqft);
+
+  lastResult = { sqft, mundha: m1, mundha2: m2, lam: l1, lam2: l2, avgM, avgL, type: 'irregular' };
+  lastMeasurement = { sqft, ghonta: sqft/1089, acre: sqft/43560 };
+}
+
+function clearIrr() {
+  ['i-m1','i-m2','i-l1','i-l2'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('res-irr').style.display='none';
+  lastResult = null;
+}
+
+// ===================== CONVERT =====================
+function calcConvert() {
+  const v = parseFloat(document.getElementById('cv-val').value)||0;
+  const f = document.getElementById('cv-from').value;
+  if (!v) { document.getElementById('cv-grid').innerHTML='<div style="grid-column:span 2;text-align:center;color:var(--muted);font-size:13px;padding:20px">مٿي قدر ڀريو</div>'; return; }
+
+  let sqft = 0;
+  if (f==='ghonta') sqft=v*1089;
+  else if (f==='acre') sqft=v*43560;
+  else if (f==='jurib') sqft=v*21780;
+  else if (f==='chauth') sqft=v*10890;
+  else if (f==='purh') sqft=v*1089/5;
+  else if (f==='sqft') sqft=v;
+  else if (f==='sqm') sqft=v/0.092903;
+
+  document.getElementById('cv-grid').innerHTML = makeGrid(sqft);
+}
+
+// ===================== REPORT PREVIEW =====================
+function updateReportPreview() {
+  const preview = document.getElementById('report-preview');
+  const summary = document.getElementById('report-summary');
+  if (!lastResult) { preview.style.display='none'; return; }
+  preview.style.display='block';
+  const r = lastResult;
+  const ghonta = (r.sqft/1089).toFixed(2);
+  const acre = (r.sqft/43560).toFixed(4);
+  let html = '';
+  if (r.type==='basic') {
+    html = `<div class="ref-row"><span class="ref-lbl">منڍو</span><span class="ref-val">${r.mundha} فوٽ</span></div>
+            <div class="ref-row"><span class="ref-lbl">لام</span><span class="ref-val">${r.lam} فوٽ</span></div>`;
+  } else {
+    html = `<div class="ref-row"><span class="ref-lbl">منڍو 1 / 2</span><span class="ref-val">${r.mundha} / ${r.mundha2} فوٽ</span></div>
+            <div class="ref-row"><span class="ref-lbl">لام 1 / 2</span><span class="ref-val">${r.lam} / ${r.lam2} فوٽ</span></div>
+            <div class="ref-row"><span class="ref-lbl">اوسط منڍو × لام</span><span class="ref-val">${r.avgM.toFixed(1)} × ${r.avgL.toFixed(1)}</span></div>`;
+  }
+  html += `<div class="ref-row"><span class="ref-lbl">ڪل رقبو (فوٽ)</span><span class="ref-val">${Math.round(r.sqft).toLocaleString()}</span></div>
+           <div class="ref-row"><span class="ref-lbl">گُھنٽا / ويسا</span><span class="ref-val">${ghonta}</span></div>
+           <div class="ref-row"><span class="ref-lbl">ايڪڙ</span><span class="ref-val">${acre}</span></div>`;
+  summary.innerHTML = html;
+}
+
+// ===================== PDF GENERATION =====================
+function generatePDF() {
+  if (!lastResult) {
+    alert('پهريون "بنيادي" يا "ويجهي" ٽئب ۾ حساب ڪريو!');
+    return;
+  }
+
+  const spinner = document.getElementById('pdf-spinner');
+  spinner.style.display = 'block';
+
+  setTimeout(() => {
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const W = 210, H = 297;
+      const r = lastResult;
+
+      // Owner info
+      const naam = document.getElementById('r-naam').value || '—';
+      const gaon = document.getElementById('r-gaon').value || '—';
+      const zila = document.getElementById('r-zila').value || '—';
+      const khasra = document.getElementById('r-khasra').value || '—';
+      const deh = document.getElementById('r-deh').value || '—';
+      const taluka = document.getElementById('r-taluka').value || '—';
+      const notes = document.getElementById('r-notes').value || '';
+      const dateStr = new Date().toLocaleDateString('en-PK');
+
+      // ---- HEADER ----
+      doc.setFillColor(15, 110, 86);
+      doc.rect(0, 0, W, 36, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text('ZAMEEN PAIMAISH REPORT', W/2, 14, { align: 'center' });
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Sindh Land Measurement Certificate', W/2, 22, { align: 'center' });
+      doc.setFontSize(9);
+      doc.text('Sindhi Traditional Measurement System', W/2, 29, { align: 'center' });
+
+      // ---- SUBTITLE BAR ----
+      doc.setFillColor(232, 245, 240);
+      doc.rect(0, 36, W, 10, 'F');
+      doc.setTextColor(15, 110, 86);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Zameen Ji Map | Paimaish Certificate', W/2, 43, { align: 'center' });
+
+      let y = 54;
+
+      // ---- OWNER SECTION ----
+      doc.setFillColor(248, 252, 250);
+      doc.roundedRect(14, y, W-28, 52, 3, 3, 'FD');
+      doc.setFillColor(15, 110, 86);
+      doc.roundedRect(14, y, W-28, 9, 3, 3, 'F');
+      doc.rect(14, y+5, W-28, 4, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('MAALIK JI MALOOMAT — Owner Information', 20, y+6.5);
+
+      doc.setTextColor(30, 50, 40);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      const ownerY = y + 14;
+      const col1 = 20, col2 = 90, col3 = 150;
+      const lh = 8;
+
+      doc.setFont('helvetica', 'bold'); doc.text('Maalik jo Naam:', col1, ownerY);
+      doc.setFont('helvetica', 'normal'); doc.text(naam, col2, ownerY);
+
+      doc.setFont('helvetica', 'bold'); doc.text('Gaon / Shehr:', col1, ownerY+lh);
+      doc.setFont('helvetica', 'normal'); doc.text(gaon, col2, ownerY+lh);
+
+      doc.setFont('helvetica', 'bold'); doc.text('Zila:', col3, ownerY+lh);
+      doc.setFont('helvetica', 'normal'); doc.text(zila, col3+20, ownerY+lh);
+
+      doc.setFont('helvetica', 'bold'); doc.text('Khasro No:', col1, ownerY+lh*2);
+      doc.setFont('helvetica', 'normal'); doc.text(khasra, col2, ownerY+lh*2);
+
+      doc.setFont('helvetica', 'bold'); doc.text('Deh No:', col3, ownerY+lh*2);
+      doc.setFont('helvetica', 'normal'); doc.text(deh, col3+20, ownerY+lh*2);
+
+      doc.setFont('helvetica', 'bold'); doc.text('Taluko:', col1, ownerY+lh*3);
+      doc.setFont('helvetica', 'normal'); doc.text(taluka, col2, ownerY+lh*3);
+
+      doc.setFont('helvetica', 'bold'); doc.text('Tarikh:', col3, ownerY+lh*3);
+      doc.setFont('helvetica', 'normal'); doc.text(dateStr, col3+20, ownerY+lh*3);
+
+      y += 60;
+
+      // ---- MEASUREMENTS SECTION ----
+      doc.setFillColor(248, 252, 250);
+      doc.roundedRect(14, y, W-28, 58, 3, 3, 'FD');
+      doc.setFillColor(15, 110, 86);
+      doc.roundedRect(14, y, W-28, 9, 3, 3, 'F');
+      doc.rect(14, y+5, W-28, 4, 'F');
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(10); doc.setFont('helvetica','bold');
+      doc.text('PAIMAISH JI DETAILS — Measurement Details', 20, y+6.5);
+
+      doc.setTextColor(30,50,40);
+      const mY = y + 16;
+      const mLh = 8;
+
+      if (r.type === 'basic') {
+        doc.setFont('helvetica','bold'); doc.text('Mundho (Width):', col1, mY);
+        doc.setFont('helvetica','normal'); doc.text(r.mundha + ' feet', col2, mY);
+
+        doc.setFont('helvetica','bold'); doc.text('Lam (Length):', col1, mY+mLh);
+        doc.setFont('helvetica','normal'); doc.text(r.lam + ' feet', col2, mY+mLh);
+
+        doc.setFont('helvetica','bold'); doc.text('Formula:', col1, mY+mLh*2);
+        doc.setFont('helvetica','normal'); doc.text(`${r.mundha} x ${r.lam} = ${Math.round(r.sqft).toLocaleString()} sq ft`, col2, mY+mLh*2);
+      } else {
+        doc.setFont('helvetica','bold'); doc.text('Mundho 1 / 2:', col1, mY);
+        doc.setFont('helvetica','normal'); doc.text(`${r.mundha} / ${r.mundha2} feet`, col2, mY);
+
+        doc.setFont('helvetica','bold'); doc.text('Lam 1 / 2:', col1, mY+mLh);
+        doc.setFont('helvetica','normal'); doc.text(`${r.lam} / ${r.lam2} feet`, col2, mY+mLh);
+
+        doc.setFont('helvetica','bold'); doc.text('Avg Mundho x Lam:', col1, mY+mLh*2);
+        doc.setFont('helvetica','normal'); doc.text(`${r.avgM.toFixed(1)} x ${r.avgL.toFixed(1)} = ${Math.round(r.sqft).toLocaleString()} sq ft`, col2, mY+mLh*2);
+      }
+
+      doc.setFont('helvetica','bold'); doc.text('Sq Feet:', col1, mY+mLh*3);
+      doc.setFont('helvetica','normal'); doc.text(Math.round(r.sqft).toLocaleString() + ' sq ft', col2, mY+mLh*3);
+
+      doc.setFont('helvetica','bold'); doc.text('Method:', col3, mY);
+      doc.setFont('helvetica','normal'); doc.text(r.type==='basic'?'Barabar (Equal)':'Vejhi (Average)', col3+22, mY);
+
+      y += 66;
+
+      // ---- RESULTS BOX ----
+      doc.setFillColor(14, 100, 76);
+      doc.roundedRect(14, y, W-28, 42, 4, 4, 'F');
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(11); doc.setFont('helvetica','bold');
+      doc.text('NATIJO — RESULTS', W/2, y+9, { align:'center' });
+
+      const ghonta = (r.sqft/1089);
+      const acre = (r.sqft/43560);
+      const chauth = acre*4;
+      const jurib = acre*2;
+      const sqm = r.sqft*0.092903;
+
+      const results = [
+        { l:'Ghonta/Weso', v: ghonta.toFixed(2) },
+        { l:'Ekar (Acre)', v: acre.toFixed(4) },
+        { l:'Chauthai', v: chauth.toFixed(3) },
+        { l:'Jurib (Sindh)', v: jurib.toFixed(3) },
+        { l:'Sq Meter', v: sqm.toFixed(1) },
+        { l:'Sq Feet', v: Math.round(r.sqft).toLocaleString() }
+      ];
+
+      doc.setFontSize(9.5);
+      const rCols = [20, 75, 130];
+      let rRow = 0, rCol = 0;
+      results.forEach((res, i) => {
+        const rx = rCols[rCol] + 2;
+        const ry = y + 17 + rRow * 9;
+        doc.setFont('helvetica','bold'); doc.setTextColor(200,240,220);
+        doc.text(res.l + ':', rx, ry);
+        doc.setFont('helvetica','normal'); doc.setTextColor(255,255,255);
+        doc.text(res.v, rx + 38, ry);
+        rCol++;
+        if (rCol >= 3) { rCol=0; rRow++; }
+      });
+
+      y += 50;
+
+      // ---- DIAGRAM ----
+      doc.setFillColor(248,252,250);
+      doc.roundedRect(14, y, W-28, 50, 3, 3, 'FD');
+      doc.setFillColor(15,110,86);
+      doc.roundedRect(14, y, W-28, 9, 3, 3, 'F');
+      doc.rect(14, y+5, W-28, 4, 'F');
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(10); doc.setFont('helvetica','bold');
+      doc.text('ZAMEEN JO NAQSHA — Land Diagram', 20, y+6.5);
+
+      // Draw rectangle diagram
+      const dX=55, dY=y+15, dW=100, dH=28;
+      doc.setDrawColor(15,110,86); doc.setLineWidth(1.5);
+      doc.setFillColor(232,245,240);
+      doc.rect(dX, dY, dW, dH, 'FD');
+
+      doc.setTextColor(15,110,86); doc.setFontSize(9); doc.setFont('helvetica','bold');
+      const lamLabel = r.type==='basic' ? `Lam: ${r.lam} ft` : `Lam: ${r.lam}/${r.lam2} ft`;
+      const munLabel = r.type==='basic' ? `${r.mundha} ft` : `${r.mundha}/${r.mundha2} ft`;
+      doc.text(lamLabel, dX+dW/2, dY-2, {align:'center'});
+      doc.text(lamLabel, dX+dW/2, dY+dH+5, {align:'center'});
+      doc.text(munLabel, dX-2, dY+dH/2+2, {align:'right'});
+      doc.text(munLabel, dX+dW+2, dY+dH/2+2);
+
+      const ghontaText = ghonta.toFixed(1) + ' Ghonta';
+      const acreText = '= ' + acre.toFixed(3) + ' Acre';
+      doc.setTextColor(8,80,65); doc.setFontSize(10);
+      doc.text(ghontaText, dX+dW/2, dY+dH/2+1, {align:'center'});
+      doc.setFontSize(8);
+      doc.text(acreText, dX+dW/2, dY+dH/2+7, {align:'center'});
+
+      // formula on right
+      doc.setTextColor(30,50,40); doc.setFontSize(8.5); doc.setFont('helvetica','normal');
+      const fx = dX+dW+15;
+      const fy = dY+5;
+      if (r.type==='basic') {
+        doc.text(`${r.mundha} x ${r.lam}`, fx, fy);
+        doc.line(fx, fy+2, fx+40, fy+2);
+        doc.text(`= ${Math.round(r.sqft).toLocaleString()} ft`, fx, fy+7);
+        doc.text(`÷ 1089`, fx, fy+14);
+        doc.line(fx, fy+16, fx+40, fy+16);
+        doc.setFont('helvetica','bold'); doc.setTextColor(15,110,86);
+        doc.text(`= ${ghonta.toFixed(2)} Ghonta`, fx, fy+22);
+      } else {
+        doc.text(`Avg M: ${r.avgM.toFixed(1)} ft`, fx, fy);
+        doc.text(`Avg L: ${r.avgL.toFixed(1)} ft`, fx, fy+7);
+        doc.text(`= ${Math.round(r.sqft).toLocaleString()} ft`, fx, fy+14);
+        doc.setFont('helvetica','bold'); doc.setTextColor(15,110,86);
+        doc.text(`= ${ghonta.toFixed(2)} Ghonta`, fx, fy+22);
+      }
+
+      y += 58;
+
+      // ---- NOTES ----
+      if (notes) {
+        doc.setFillColor(255,248,225);
+        doc.roundedRect(14, y, W-28, 16, 3, 3, 'FD');
+        doc.setTextColor(80,60,0); doc.setFontSize(9); doc.setFont('helvetica','normal');
+        doc.text('Notes: ' + notes, 20, y+6);
+        y += 20;
+      }
+
+      // ---- FOOTER ----
+      doc.setFillColor(15,110,86);
+      doc.rect(0, H-18, W, 18, 'F');
+      doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
+      doc.text('Zameen Ji Map — Sindhi Land Measurement App', W/2, H-11, {align:'center'});
+      doc.text('1 Acre = 40 Ghonta = 43,560 sq ft  |  1 Ghonta = 1,089 sq ft (33x33)', W/2, H-5, {align:'center'});
+
+      // ---- SAVE ----
+      const fname = `zameen_${naam.replace(/\s+/g,'_') || 'report'}_${khasra || 'xxx'}.pdf`;
+      doc.save(fname);
+      spinner.style.display = 'none';
+    } catch(e) {
+      spinner.style.display = 'none';
+      alert('PDF Error: ' + e.message);
+    }
+  }, 200);
+}
+
+// ===================== PWA / OFFLINE =====================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.add('show');
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('installBtn').classList.remove('show');
+    });
+  }
+}
+
+window.addEventListener('offline', () => document.getElementById('offlineBanner').classList.add('show'));
+window.addEventListener('online', () => document.getElementById('offlineBanner').classList.remove('show'));
+</script>
+</body>
+</html>
