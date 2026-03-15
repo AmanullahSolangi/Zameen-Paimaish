@@ -171,8 +171,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
   <!-- TAB 1: BASIC -->
   <div id="tab-basic" class="section show">
     <div class="card">
-      <div class="card-title">📐 منڍو × لام — برابر ماپ</div>
-      <div class="info-box">جڏهن ٻئي منڍا برابر ۽ ٻئي لام برابر هجن ته: <b>منڍو × لام = رقبو (فوٽ)</b></div>
+      <div class="card-title" id="basic-title">📐 منڍو × لام — برابر ماپ</div>
+      <div class="info-box" id="basic-info">جڏهن ٻئي منڍا برابر ۽ ٻئي لام برابر هجن ته: <b>منڍو × لام = رقبو (فوٽ)</b></div>
 
       <div class="diagram">
         <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
@@ -191,27 +191,27 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 
       <div class="row2">
         <div class="field">
-          <label>🔸 منڍو (فوٽ)</label>
+          <label id="lbl-mundha">🔸 منڍو (فوٽ)</label>
           <input type="number" id="b-mundha" placeholder="121" inputmode="decimal" oninput="calcBasic()"/>
         </div>
         <div class="field">
-          <label>🔹 لام (فوٽ)</label>
+          <label id="lbl-lam">🔹 لام (فوٽ)</label>
           <input type="number" id="b-lam" placeholder="360" inputmode="decimal" oninput="calcBasic()"/>
         </div>
       </div>
       <div class="field">
-        <label>يونٽ چونڊيو</label>
+        <label id="lbl-unit-b">يونٽ چونڊيو</label>
         <select id="b-unit" onchange="calcBasic()">
-          <option value="ghonta">گُھنٽا / ويسا</option>
-          <option value="acre">ايڪڙ</option>
-          <option value="jurib">جريب (سنڌ)</option>
-          <option value="chauth">چوٿائي</option>
-          <option value="sqft">اسڪوائر فوٽ</option>
-          <option value="sqm">اسڪوائر ميٽر</option>
+          <option value="ghonta" id="opt-b-ghonta">گُھنٽا / ويسا</option>
+          <option value="acre" id="opt-b-acre">ايڪڙ</option>
+          <option value="jurib" id="opt-b-jurib">جريب (سنڌ)</option>
+          <option value="chauth" id="opt-b-chauth">چوٿائي</option>
+          <option value="sqft" id="opt-b-sqft">اسڪوائر فوٽ</option>
+          <option value="sqm" id="opt-b-sqm">اسڪوائر ميٽر</option>
         </select>
       </div>
-      <button class="btn-calc" onclick="calcBasic()">🧮 حساب ڪريو</button>
-      <button class="btn-clear" onclick="clearBasic()">🗑 صاف ڪريو</button>
+      <button class="btn-calc" id="btn-calc-basic" onclick="calcBasic()">🧮 حساب ڪريو</button>
+      <button class="btn-clear" id="btn-clear-basic" onclick="clearBasic()">🗑 صاف ڪريو</button>
 
       <div class="result-box" id="res-basic">
         <div class="result-main">
@@ -227,40 +227,40 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
   <!-- TAB 2: IRREGULAR -->
   <div id="tab-irregular" class="section">
     <div class="card">
-      <div class="card-title">📏 ويجهي ماپ — غير برابر زمين</div>
-      <div class="info-box">جيڪڏهن منڍا يا لام برابر نه هجن: <b>(م1+م2)÷2 × (ل1+ل2)÷2</b></div>
+      <div class="card-title" id="irr-title">📏 ويجهي ماپ — غير برابر زمين</div>
+      <div class="info-box" id="irr-info">جيڪڏهن منڍا يا لام برابر نه هجن: <b>(م1+م2)÷2 × (ل1+ل2)÷2</b></div>
       <div class="step">
         <div class="step-num">1</div>
-        <div class="step-text">ٻئي منڍا جوڙ ڪري <b>2 سان ونڊ ڪريو</b> = اوسط منڍو</div>
+        <div class="step-text" id="irr-step1">ٻئي منڍا جوڙ ڪري <b>2 سان ونڊ ڪريو</b> = اوسط منڍو</div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <div class="step-text">ٻئي لام جوڙ ڪري <b>2 سان ونڊ ڪريو</b> = اوسط لام</div>
+        <div class="step-text" id="irr-step2">ٻئي لام جوڙ ڪري <b>2 سان ونڊ ڪريو</b> = اوسط لام</div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <div class="step-text"><b>اوسط منڍو × اوسط لام</b> = ڪل رقبو (فوٽ)</div>
+        <div class="step-text" id="irr-step3"><b>اوسط منڍو × اوسط لام</b> = ڪل رقبو (فوٽ)</div>
       </div>
 
       <div class="row2">
-        <div class="field"><label>منڍو 1 (فوٽ)</label><input type="number" id="i-m1" placeholder="121" inputmode="decimal" oninput="calcIrr()"/></div>
-        <div class="field"><label>منڍو 2 (فوٽ)</label><input type="number" id="i-m2" placeholder="130" inputmode="decimal" oninput="calcIrr()"/></div>
-        <div class="field"><label>لام 1 (فوٽ)</label><input type="number" id="i-l1" placeholder="360" inputmode="decimal" oninput="calcIrr()"/></div>
-        <div class="field"><label>لام 2 (فوٽ)</label><input type="number" id="i-l2" placeholder="380" inputmode="decimal" oninput="calcIrr()"/></div>
+        <div class="field"><label id="lbl-m1">منڍو 1 (فوٽ)</label><input type="number" id="i-m1" placeholder="121" inputmode="decimal" oninput="calcIrr()"/></div>
+        <div class="field"><label id="lbl-m2">منڍو 2 (فوٽ)</label><input type="number" id="i-m2" placeholder="130" inputmode="decimal" oninput="calcIrr()"/></div>
+        <div class="field"><label id="lbl-l1">لام 1 (فوٽ)</label><input type="number" id="i-l1" placeholder="360" inputmode="decimal" oninput="calcIrr()"/></div>
+        <div class="field"><label id="lbl-l2">لام 2 (فوٽ)</label><input type="number" id="i-l2" placeholder="380" inputmode="decimal" oninput="calcIrr()"/></div>
       </div>
       <div class="field">
-        <label>يونٽ چونڊيو</label>
+        <label id="lbl-unit-i">يونٽ چونڊيو</label>
         <select id="i-unit" onchange="calcIrr()">
-          <option value="ghonta">گُھنٽا / ويسا</option>
-          <option value="acre">ايڪڙ</option>
-          <option value="jurib">جريب (سنڌ)</option>
-          <option value="chauth">چوٿائي</option>
-          <option value="sqft">اسڪوائر فوٽ</option>
-          <option value="sqm">اسڪوائر ميٽر</option>
+          <option value="ghonta" id="opt-i-ghonta">گُھنٽا / ويسا</option>
+          <option value="acre" id="opt-i-acre">ايڪڙ</option>
+          <option value="jurib" id="opt-i-jurib">جريب (سنڌ)</option>
+          <option value="chauth" id="opt-i-chauth">چوٿائي</option>
+          <option value="sqft" id="opt-i-sqft">اسڪوائر فوٽ</option>
+          <option value="sqm" id="opt-i-sqm">اسڪوائر ميٽر</option>
         </select>
       </div>
-      <button class="btn-calc" onclick="calcIrr()">🧮 اوسط سان حساب ڪريو</button>
-      <button class="btn-clear" onclick="clearIrr()">🗑 صاف ڪريو</button>
+      <button class="btn-calc" id="btn-calc-irr" onclick="calcIrr()">🧮 اوسط سان حساب ڪريو</button>
+      <button class="btn-clear" id="btn-clear-irr" onclick="clearIrr()">🗑 صاف ڪريو</button>
 
       <div class="result-box" id="res-irr">
         <div class="result-main">
@@ -276,35 +276,35 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
   <!-- TAB 3: CONVERT -->
   <div id="tab-convert" class="section">
     <div class="card">
-      <div class="card-title">🔄 ماپ جي تبديلي</div>
+      <div class="card-title" id="conv-title">🔄 ماپ جي تبديلي</div>
       <div class="row2">
         <div class="field">
-          <label>قدر</label>
+          <label id="lbl-cv-val">قدر</label>
           <input type="number" id="cv-val" placeholder="40" inputmode="decimal" oninput="calcConvert()"/>
         </div>
         <div class="field">
-          <label>يونٽ</label>
+          <label id="lbl-cv-unit">يونٽ</label>
           <select id="cv-from" onchange="calcConvert()">
-            <option value="ghonta">گھنٽا / ويسا</option>
-            <option value="acre">ايڪڙ</option>
-            <option value="jurib">جريب (سنڌ)</option>
-            <option value="chauth">چوٿائي</option>
-            <option value="purh">پُرهه</option>
-            <option value="sqft">اسڪوائر فوٽ</option>
-            <option value="sqm">اسڪوائر ميٽر</option>
+            <option value="ghonta" id="opt-c-ghonta">گھنٽا / ويسا</option>
+            <option value="acre" id="opt-c-acre">ايڪڙ</option>
+            <option value="jurib" id="opt-c-jurib">جريب (سنڌ)</option>
+            <option value="chauth" id="opt-c-chauth">چوٿائي</option>
+            <option value="purh" id="opt-c-purh">پُرهه</option>
+            <option value="sqft" id="opt-c-sqft">اسڪوائر فوٽ</option>
+            <option value="sqm" id="opt-c-sqm">اسڪوائر ميٽر</option>
           </select>
         </div>
       </div>
       <div class="cv-grid" id="cv-grid">
-        <div style="grid-column:span 2;text-align:center;color:var(--muted);font-size:13px;padding:20px">مٿي قدر ڀريو</div>
+        <div style="grid-column:span 2;text-align:center;color:var(--muted);font-size:13px;padding:20px" id="cv-placeholder">مٿي قدر ڀريو</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">📖 مثال: 121 × 360 = 1 ايڪڙ</div>
-      <div class="step"><div class="step-num">1</div><div class="step-text"><b>121 × 360 = 43,560</b> فوٽ</div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-text"><b>43,560 ÷ 1,089 = 40</b> گھنٽا</div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-text"><b>40 گھنٽا = 1 ايڪڙ ✓</b></div></div>
+      <div class="card-title" id="conv-example-title">📖 مثال: 121 × 360 = 1 ايڪڙ</div>
+      <div class="step"><div class="step-num">1</div><div class="step-text" id="conv-s1"><b>121 × 360 = 43,560</b> فوٽ</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text" id="conv-s2"><b>43,560 ÷ 1,089 = 40</b> گھنٽا</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text" id="conv-s3"><b>40 گھنٽا = 1 ايڪڙ ✓</b></div></div>
     </div>
   </div>
 
@@ -400,64 +400,125 @@ let currentLang = 'sd';
 // ===================== LANGUAGE DATA =====================
 const L = {
   sd: {
-    hdrTitle: '🌾 زمين جي ماپ',
-    hdrSub: 'سنڌ — روايتي ماپ ڪيلڪيوليٽر',
+    dir: 'rtl',
+    hdrTitle: '🌾 زمين جي ماپ', hdrSub: 'سنڌ — روايتي ماپ ڪيلڪيوليٽر',
     navBasic: '📐 بنيادي', navIrr: '📏 ويجهي', navConv: '🔄 تبديلي', navRpt: '📄 رپورٽ', navRef: '📚 حوالو',
-    calcBtn: '🧮 حساب ڪريو', clearBtn: '🗑 صاف ڪريو',
+    basicTitle: '📐 منڍو × لام — برابر ماپ',
+    basicInfo: 'جڏهن ٻئي منڍا برابر ۽ ٻئي لام برابر هجن ته: منڍو × لام = رقبو (فوٽ)',
+    lblMundha: '🔸 منڍو (فوٽ)', lblLam: '🔹 لام (فوٽ)', lblUnitB: 'يونٽ چونڊيو',
+    btnCalcBasic: '🧮 حساب ڪريو', btnClearBasic: '🗑 صاف ڪريو',
+    irrTitle: '📏 ويجهي ماپ — غير برابر زمين',
+    irrInfo: 'جيڪڏهن منڍا يا لام برابر نه هجن: (م1+م2)÷2 × (ل1+ل2)÷2',
+    irrS1: 'ٻئي منڍا جوڙ ڪري 2 سان ونڊ ڪريو = اوسط منڍو',
+    irrS2: 'ٻئي لام جوڙ ڪري 2 سان ونڊ ڪريو = اوسط لام',
+    irrS3: 'اوسط منڍو × اوسط لام = ڪل رقبو (فوٽ)',
+    lblM1: 'منڍو 1 (فوٽ)', lblM2: 'منڍو 2 (فوٽ)', lblL1: 'لام 1 (فوٽ)', lblL2: 'لام 2 (فوٽ)',
+    lblUnitI: 'يونٽ چونڊيو',
+    btnCalcIrr: '🧮 اوسط سان حساب ڪريو', btnClearIrr: '🗑 صاف ڪريو',
+    convTitle: '🔄 ماپ جي تبديلي', lblCvVal: 'قدر', lblCvUnit: 'يونٽ',
+    cvPlaceholder: 'مٿي قدر ڀريو',
+    convExTitle: '📖 مثال: 121 × 360 = 1 ايڪڙ',
+    convS1: '121 × 360 = 43,560 فوٽ', convS2: '43,560 ÷ 1,089 = 40 گھنٽا', convS3: '40 گھنٽا = 1 ايڪڙ ✓',
+    dMundha: 'منڍو', dLandArea: 'زمين جو رقبو', dResult: 'نتيجو هتي', dFormula: 'منڍو × لام ÷ 1089',
     rptTitle: 'PDF رپورٽ',
     rptStep1: 'قدم 1:', rptInfo1: 'پهريان "بنيادي" يا "ويجهي" ٽئب ۾ وڃو ۽ پنهنجي زمين جي ماپ داخل ڪريو',
     rptStep2: 'قدم 2:', rptInfo2: 'پوءِ هتي واپس اچو، هيٺ پنهنجي تفصيل ڀريو',
     rptStep3: 'قدم 3:', rptInfo3: '"PDF ٺاهيو" بٽن دٻايو — توهان کي مڪمل رپورٽ جي PDF ملندي',
     ownerTitle: 'مالڪ جي معلومات',
-    lblNaam: 'مالڪ جو نالو', lblGaon: 'ڳوٺ', lblZila: 'شهر / ضلعو', lblKhasra: 'خسرو نمبر',
-    lblDeh: 'ديهه نمبر', lblTaluka: 'تعلقو', lblNotes: 'نوٽس (اختياري)',
-    phNaam: 'مثال: Amanullah Solangi', phGaon: 'مثال: سيکهت', phZila: 'مثال: ماٽياري',
-    summaryTitle: 'حساب جو خلاصو',
-    pdfBtn: '📥 PDF ٺاهيو ۽ محفوظ ڪريو',
+    lblNaam: 'مالڪ جو نالو', lblGaon: 'ڳوٺ', lblZila: 'شهر / ضلعو',
+    lblKhasra: 'خسرو نمبر', lblDeh: 'ديهه نمبر', lblTaluka: 'تعلقو', lblNotes: 'نوٽس (اختياري)',
+    phNaam: 'مثال: Amanullah Solangi', phGaon: 'مثال: سيکاٽ', phZila: 'مثال: مٽياري',
+    summaryTitle: 'حساب جو خلاصو', pdfBtn: '📥 PDF ٺاهيو ۽ محفوظ ڪريو',
     footerDesigned: '🌾 ٺاهيندڙ: امان الله سولنگي', footerApp: 'زمين جي ماپ ايپ — سنڌ',
     offlineTxt: '⚠️ آفلائن موڊ — ڪيلڪيوليٽر ڪم ڪري ٿو',
+    dLamWord: 'لام', dFtWord: 'فوٽ',
+    opts: ['گُھنٽا / ويسا','ايڪڙ','جريب (سنڌ)','چوٿائي','اسڪوائر فوٽ','اسڪوائر ميٽر','پُرهه'],
   },
   ur: {
-    hdrTitle: '🌾 زمین کی پیمائش',
-    hdrSub: 'سندھ — روایتی پیمائش کیلکولیٹر',
+    dir: 'rtl',
+    hdrTitle: '🌾 زمین کی پیمائش', hdrSub: 'سندھ — روایتی پیمائش کیلکولیٹر',
     navBasic: '📐 بنیادی', navIrr: '📏 ناہموار', navConv: '🔄 تبدیلی', navRpt: '📄 رپورٹ', navRef: '📚 حوالہ',
-    calcBtn: '🧮 حساب کریں', clearBtn: '🗑 صاف کریں',
+    basicTitle: '📐 چوڑائی × لمبائی — برابر پیمائش',
+    basicInfo: 'جب دونوں چوڑائی برابر اور دونوں لمبائی برابر ہوں: چوڑائی × لمبائی = رقبہ (فٹ)',
+    lblMundha: '🔸 چوڑائی / منڈھا (فٹ)', lblLam: '🔹 لمبائی / لام (فٹ)', lblUnitB: 'اکائی منتخب کریں',
+    btnCalcBasic: '🧮 حساب کریں', btnClearBasic: '🗑 صاف کریں',
+    irrTitle: '📏 ناہموار پیمائش — غیر برابر زمین',
+    irrInfo: 'اگر دونوں طرف برابر نہ ہوں: (م1+م2)÷2 × (ل1+ل2)÷2',
+    irrS1: 'دونوں چوڑائی جوڑ کر 2 سے تقسیم کریں = اوسط چوڑائی',
+    irrS2: 'دونوں لمبائی جوڑ کر 2 سے تقسیم کریں = اوسط لمبائی',
+    irrS3: 'اوسط چوڑائی × اوسط لمبائی = کل رقبہ (فٹ)',
+    lblM1: 'چوڑائی 1 (فٹ)', lblM2: 'چوڑائی 2 (فٹ)', lblL1: 'لمبائی 1 (فٹ)', lblL2: 'لمبائی 2 (فٹ)',
+    lblUnitI: 'اکائی منتخب کریں',
+    btnCalcIrr: '🧮 اوسط سے حساب کریں', btnClearIrr: '🗑 صاف کریں',
+    convTitle: '🔄 پیمائش کی تبدیلی', lblCvVal: 'قدر', lblCvUnit: 'اکائی',
+    cvPlaceholder: 'اوپر قدر بھریں',
+    convExTitle: '📖 مثال: 121 × 360 = 1 ایکڑ',
+    convS1: '121 × 360 = 43,560 فٹ', convS2: '43,560 ÷ 1,089 = 40 گھنٹا', convS3: '40 گھنٹا = 1 ایکڑ ✓',
+    dMundha: 'چوڑائی', dLandArea: 'زمین کا رقبہ', dResult: 'نتیجہ یہاں', dFormula: 'چوڑائی × لمبائی ÷ 1089',
     rptTitle: 'PDF رپورٹ',
-    rptStep1: 'مرحلہ 1:', rptInfo1: 'پہلے "بنیادی" یا "ناہموار" ٹیب میں جائیں اور اپنی زمین کی پیمائش درج کریں',
+    rptStep1: 'مرحلہ 1:', rptInfo1: 'پہلے "بنیادی" یا "ناہموار" ٹیب میں جائیں اور زمین کی پیمائش درج کریں',
     rptStep2: 'مرحلہ 2:', rptInfo2: 'پھر یہاں واپس آئیں اور نیچے اپنی تفصیل بھریں',
-    rptStep3: 'مرحلہ 3:', rptInfo3: '"PDF بنائیں" بٹن دبائیں — آپ کو مکمل رپورٹ کی PDF ملے گی',
+    rptStep3: 'مرحلہ 3:', rptInfo3: '"PDF بنائیں" بٹن دبائیں — مکمل رپورٹ کی PDF ملے گی',
     ownerTitle: 'مالک کی معلومات',
-    lblNaam: 'مالک کا نام', lblGaon: 'گاؤں', lblZila: 'شہر / ضلع', lblKhasra: 'خسرہ نمبر',
-    lblDeh: 'دیہہ نمبر', lblTaluka: 'تعلقہ', lblNotes: 'نوٹس (اختیاری)',
+    lblNaam: 'مالک کا نام', lblGaon: 'گاؤں', lblZila: 'شہر / ضلع',
+    lblKhasra: 'خسرہ نمبر', lblDeh: 'دیہہ نمبر', lblTaluka: 'تعلقہ', lblNotes: 'نوٹس (اختیاری)',
     phNaam: 'مثال: Amanullah Solangi', phGaon: 'مثال: سیکھت', phZila: 'مثال: ماٹیاری',
-    summaryTitle: 'حساب کا خلاصہ',
-    pdfBtn: '📥 PDF بنائیں اور محفوظ کریں',
+    summaryTitle: 'حساب کا خلاصہ', pdfBtn: '📥 PDF بنائیں اور محفوظ کریں',
     footerDesigned: '🌾 ڈیزائن کردہ: امان اللہ سولنگی', footerApp: 'زمین کی پیمائش ایپ — سندھ',
     offlineTxt: '⚠️ آف لائن موڈ — کیلکولیٹر کام کر رہا ہے',
+    dLamWord: 'لمبائی', dFtWord: 'فٹ',
+    opts: ['گھنٹا / ویسا','ایکڑ','جریب (سندھ)','چوتھائی','مربع فٹ','مربع میٹر','پُرہ'],
   },
   en: {
-    hdrTitle: '🌾 Zameen Paimaish',
-    hdrSub: 'Sindh — Traditional Land Calculator',
+    dir: 'ltr',
+    hdrTitle: '🌾 Zameen Paimaish', hdrSub: 'Sindh — Traditional Land Calculator',
     navBasic: '📐 Basic', navIrr: '📏 Irregular', navConv: '🔄 Convert', navRpt: '📄 Report', navRef: '📚 Reference',
-    calcBtn: '🧮 Calculate', clearBtn: '🗑 Clear',
+    basicTitle: '📐 Width × Length — Equal Sides',
+    basicInfo: 'When both widths are equal and both lengths are equal: Width × Length = Area (sq ft)',
+    lblMundha: '🔸 Width / Mundho (ft)', lblLam: '🔹 Length / Lam (ft)', lblUnitB: 'Select Unit',
+    btnCalcBasic: '🧮 Calculate', btnClearBasic: '🗑 Clear',
+    irrTitle: '📏 Irregular Land — Unequal Sides',
+    irrInfo: 'If sides are unequal: (W1+W2)÷2 × (L1+L2)÷2',
+    irrS1: 'Add both widths, divide by 2 = Average width',
+    irrS2: 'Add both lengths, divide by 2 = Average length',
+    irrS3: 'Average width × Average length = Total area (sq ft)',
+    lblM1: 'Width 1 (ft)', lblM2: 'Width 2 (ft)', lblL1: 'Length 1 (ft)', lblL2: 'Length 2 (ft)',
+    lblUnitI: 'Select Unit',
+    btnCalcIrr: '🧮 Calculate with Average', btnClearIrr: '🗑 Clear',
+    convTitle: '🔄 Unit Converter', lblCvVal: 'Value', lblCvUnit: 'Unit',
+    cvPlaceholder: 'Enter value above',
+    convExTitle: '📖 Example: 121 × 360 = 1 Acre',
+    convS1: '121 × 360 = 43,560 sq ft', convS2: '43,560 ÷ 1,089 = 40 Ghonta', convS3: '40 Ghonta = 1 Acre ✓',
+    dMundha: 'Width', dLandArea: 'Land Area', dResult: 'Result here', dFormula: 'Width × Length ÷ 1089',
     rptTitle: 'PDF Report',
     rptStep1: 'Step 1:', rptInfo1: 'Go to "Basic" or "Irregular" tab and enter your land measurements',
     rptStep2: 'Step 2:', rptInfo2: 'Come back here and fill in the owner details below',
     rptStep3: 'Step 3:', rptInfo3: 'Press "Generate PDF" — you will get a complete report PDF',
     ownerTitle: 'Owner Information',
-    lblNaam: 'Owner Name', lblGaon: 'Village', lblZila: 'City / District', lblKhasra: 'Khasra No',
-    lblDeh: 'Deh No', lblTaluka: 'Taluka', lblNotes: 'Notes (optional)',
-    phNaam: 'e.g. Amanullah Solangi', phGaon: 'e.g. Seekhat', phZila: 'e.g. Matiari',
-    summaryTitle: 'Calculation Summary',
-    pdfBtn: '📥 Generate & Save PDF',
+    lblNaam: 'Owner Name', lblGaon: 'Village', lblZila: 'City / District',
+    lblKhasra: 'Khasra No', lblDeh: 'Deh No', lblTaluka: 'Taluka', lblNotes: 'Notes (optional)',
+    phNaam: 'e.g. Amanullah Solangi', phGaon: 'e.g. Seekhat (سيکاٽ)', phZila: 'e.g. Matiari (مٽياري)',
+    summaryTitle: 'Calculation Summary', pdfBtn: '📥 Generate & Save PDF',
     footerDesigned: '🌾 Designed by: Amanullah Solangi', footerApp: 'Land Measurement App — Sindh',
     offlineTxt: '⚠️ Offline Mode — Calculator is working',
+    dLamWord: 'Length', dFtWord: 'ft',
+    opts: ['Ghonta / Weso','Acre','Jurib (Sindh)','Chauthai','Square Feet','Square Meter','Purh'],
   }
 };
 
 function setLang(l) {
   currentLang = l;
   const t = L[l];
+
+  // Direction — whole page
+  document.body.style.direction = t.dir;
+  document.body.style.textAlign = t.dir === 'ltr' ? 'left' : 'right';
+  document.querySelectorAll('.field input, .field select').forEach(el => {
+    el.style.direction = t.dir;
+    el.style.textAlign = t.dir === 'ltr' ? 'left' : 'right';
+  });
+
+  // Active button
   document.querySelectorAll('.lang-bar button').forEach(b => b.classList.remove('active'));
   document.getElementById('lb-' + l).classList.add('active');
 
@@ -465,12 +526,55 @@ function setLang(l) {
   document.getElementById('hdr-title').textContent = t.hdrTitle;
   document.getElementById('hdr-sub').textContent = t.hdrSub;
 
-  // Nav tabs
+  // Nav
   document.getElementById('nav-basic').textContent = t.navBasic;
   document.getElementById('nav-irregular').textContent = t.navIrr;
   document.getElementById('nav-convert').textContent = t.navConv;
   document.getElementById('nav-report').textContent = t.navRpt;
   document.getElementById('nav-ref').textContent = t.navRef;
+
+  // Basic tab
+  document.getElementById('basic-title').textContent = t.basicTitle;
+  document.getElementById('basic-info').innerHTML = t.basicInfo;
+  document.getElementById('lbl-mundha').textContent = t.lblMundha;
+  document.getElementById('lbl-lam').textContent = t.lblLam;
+  document.getElementById('lbl-unit-b').textContent = t.lblUnitB;
+  document.getElementById('btn-calc-basic').textContent = t.btnCalcBasic;
+  document.getElementById('btn-clear-basic').textContent = t.btnClearBasic;
+
+  // Diagram
+  document.getElementById('d-mundha-word').textContent = t.dMundha;
+  document.getElementById('d-mundha-word2').textContent = t.dMundha;
+  document.getElementById('d-inside-label1').textContent = t.dLandArea;
+  document.getElementById('d-inside-label2').textContent = t.dFormula;
+  const cur = document.getElementById('d-center').textContent;
+  if (cur === 'نتيجو هتي' || cur === 'Result here' || cur === 'نتیجہ یہاں') {
+    document.getElementById('d-center').textContent = t.dResult;
+  }
+
+  // Irregular tab
+  document.getElementById('irr-title').textContent = t.irrTitle;
+  document.getElementById('irr-info').innerHTML = t.irrInfo;
+  document.getElementById('irr-step1').innerHTML = t.irrS1;
+  document.getElementById('irr-step2').innerHTML = t.irrS2;
+  document.getElementById('irr-step3').innerHTML = t.irrS3;
+  document.getElementById('lbl-m1').textContent = t.lblM1;
+  document.getElementById('lbl-m2').textContent = t.lblM2;
+  document.getElementById('lbl-l1').textContent = t.lblL1;
+  document.getElementById('lbl-l2').textContent = t.lblL2;
+  document.getElementById('lbl-unit-i').textContent = t.lblUnitI;
+  document.getElementById('btn-calc-irr').textContent = t.btnCalcIrr;
+  document.getElementById('btn-clear-irr').textContent = t.btnClearIrr;
+
+  // Convert tab
+  document.getElementById('conv-title').textContent = t.convTitle;
+  document.getElementById('lbl-cv-val').textContent = t.lblCvVal;
+  document.getElementById('lbl-cv-unit').textContent = t.lblCvUnit;
+  document.getElementById('cv-placeholder').textContent = t.cvPlaceholder;
+  document.getElementById('conv-example-title').textContent = t.convExTitle;
+  document.getElementById('conv-s1').innerHTML = '<b>' + t.convS1 + '</b>';
+  document.getElementById('conv-s2').innerHTML = '<b>' + t.convS2 + '</b>';
+  document.getElementById('conv-s3').innerHTML = '<b>' + t.convS3 + '</b>';
 
   // Report tab
   document.getElementById('rpt-title').textContent = t.rptTitle;
@@ -501,9 +605,29 @@ function setLang(l) {
   // Offline banner
   document.getElementById('offlineBanner').textContent = t.offlineTxt;
 
-  // Calc/clear buttons
-  document.querySelectorAll('.btn-calc:not(#btn-pdf-gen)').forEach(b => b.textContent = t.calcBtn);
-  document.querySelectorAll('.btn-clear').forEach(b => b.textContent = t.clearBtn);
+  // Dropdown options — all 3 selects
+  const optIds = ['b','i'];
+  const optKeys = ['ghonta','acre','jurib','chauth','sqft','sqm'];
+  optIds.forEach(p => {
+    optKeys.forEach((k,i) => {
+      const el = document.getElementById('opt-'+p+'-'+k);
+      if (el) el.textContent = t.opts[i];
+    });
+  });
+  // Convert dropdown (has purh extra)
+  const cvKeys = ['ghonta','acre','jurib','chauth','purh','sqft','sqm'];
+  const cvOpts = [t.opts[0],t.opts[1],t.opts[2],t.opts[3],t.opts[6],t.opts[4],t.opts[5]];
+  cvKeys.forEach((k,i) => {
+    const el = document.getElementById('opt-c-'+k);
+    if (el) el.textContent = cvOpts[i];
+  });
+
+  // Diagram lam top/bot labels — update ft word
+  const lamVal = document.getElementById('d-lam-top').textContent.match(/[\d.]+/);
+  const lamNum = lamVal ? lamVal[0] : '؟';
+  const lamDisplay = lamNum === '؟' ? t.dLamWord+': ؟ '+t.dFtWord : t.dLamWord+': '+lamNum+' '+t.dFtWord;
+  document.getElementById('d-lam-top').textContent = lamDisplay;
+  document.getElementById('d-lam-bot').textContent = lamDisplay;
 }
 
 // ===================== TABS =====================
@@ -552,10 +676,14 @@ function calcBasic() {
   const l = parseFloat(document.getElementById('b-lam').value) || 0;
   const unit = document.getElementById('b-unit').value;
 
-  document.getElementById('d-lam-top').textContent = `لام: ${l || '؟'} فوٽ`;
-  document.getElementById('d-lam-bot').textContent = `لام: ${l || '؟'} فوٽ`;
-  document.getElementById('d-m-l').textContent = `${m || '؟'} فوٽ`;
-  document.getElementById('d-m-r').textContent = `${m || '؟'} فوٽ`;
+  const t = L[currentLang];
+  const lamWord = t ? t.dLamWord : 'لام';
+  const ftWord = t ? t.dFtWord : 'فوٽ';
+
+  document.getElementById('d-lam-top').textContent = `${lamWord}: ${l || '؟'} ${ftWord}`;
+  document.getElementById('d-lam-bot').textContent = `${lamWord}: ${l || '؟'} ${ftWord}`;
+  document.getElementById('d-m-l').textContent = `${m || '؟'} ${ftWord}`;
+  document.getElementById('d-m-r').textContent = `${m || '؟'} ${ftWord}`;
 
   if (!m || !l) { document.getElementById('d-center').textContent = 'نتيجو هتي'; return; }
   const sqft = m * l;
